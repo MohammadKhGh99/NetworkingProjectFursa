@@ -1,26 +1,34 @@
 Local DNS Server IP
 -------------------
-<ip-here>
+127.0.0.53
 
 
 
 Default gateway IP
 -------------------
-<ip-here>
+10.0.0.1
 
 
 
 DHCP IP allocation sys-logs
 -------------------
-<logs-here>
+Discover: 2024-05-21T19:04:31.625915+00:00 ip-10-0-0-232 dhcpcd[432]: enX0: soliciting a DHCP lease
+Offer: 2024-05-21T19:04:31.625918+00:00 ip-10-0-0-232 dhcpcd[432]: enX0: offered 10.0.0.232 from 10.0.0.1
+Request & Acknowledge: 2024-05-21T19:04:31.625922+00:00 ip-10-0-0-232 dhcpcd[432]: enX0: leased 10.0.0.232 for 3600 seconds
+**: 2024-05-21T19:04:31.625925+00:00 ip-10-0-0-232 dhcpcd[432]: enX0: adding route to 10.0.0.0/24
+
 
 
 
 Public to private num of hops
 -------------------
-<answer-here>
+None.
+Because the private instance don't have access to internet, so the public instance's packets are not receiving any
+response from any hops between source and destination.
 
 
 DNS queries from the private instance
 -------------------
-<answer-here>
+Yes we can resolve DNS address of a public website from the private instance.
+Both public and private instances are in the same VPC.
+* dig command works fine in the private instance.
