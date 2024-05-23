@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# the user should add ip address as the only argument
+if [ $# -ne 1 ]; then
+  echo "Add ip address of private instance"
+  exit 1
+fi
+
+# checks if the old key exists
 if [ -e private_key.pem ]; then
   mv private_key.pem old_key.pem
   mv private_key.pem.pub old_key.pem.pub
