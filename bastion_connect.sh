@@ -14,7 +14,7 @@ elif [ $# -eq 2 ]; then
   ssh -o StrictHostKeyChecking=accept-new -t -i "$KEY_PATH" ubuntu@$1 "ssh -i private_key.pem ubuntu@$2"
 # we have 3 arguments, two as above and the third one for a command to run in private instance
 elif [ $# -eq 3 ];then
-  ssh -o StrictHostKeyChecking=accept-new -i "$KEY_PATH" ubuntu@$1 "ssh -i private.pem ubuntu@$2 '$3'"
+  ssh -o StrictHostKeyChecking=accept-new -i "$KEY_PATH" ubuntu@$1 "ssh -i private_key.pem ubuntu@$2 '$3'"
 # if there is no arguments given
 else
   echo "Please provide bastion IP address"
