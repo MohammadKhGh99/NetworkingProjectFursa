@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "current IP:   $1"
+
 # checks if the user gives the script the ip addres of the server
 if [ $# -ne 1 ]; then
   echo "Please add the server ip as argument"
@@ -29,10 +29,10 @@ else
   echo "$VERIFY_OUTPUT"
 fi
 
-rm -f cert-ca-aws.pem
+rm -f cert-ca-aws.pem*
 
 # generate master key and save it in master-key.pem file
-openssl rand -out master-key.pem 32
+openssl rand -base64 -out master-key.pem 32
 
 # encrypt the generated master-key secret with the server certificate
 openssl smime -encrypt -aes-256-cbc -in master-key.pem -outform DER cert.pem | base64 -w 0
@@ -41,14 +41,15 @@ openssl smime -encrypt -aes-256-cbc -in master-key.pem -outform DER cert.pem | b
 SESSION_ID=$(cat sessionID.txt)
 MASTER_KEY=$(cat master-key.pem)
 SAMPLE_MSG="Hi server, please encrypt me and send to client!"
-KEY_EXCH="{'sessionID': $SESSION_ID, 'masterKey': $MASTER_KEY, 'sampleMessage', '$SAMPLE_MSG'}"
+KEY_EXCH="{\"sessionID\": \"$SESSION_ID\", \"masterKey\": \"$MASTER_KEY\", \"sampleMessage\": \"$SAMPLE_MSG\"}"
 
 # get the encrypted sample message from server
-ENC_SAM_MSG=$(curl -X POST -H "Content-Type: application/json" -d "$KEY_EXCH" "$1:8080/keyexchange" | jq -r ".encryptedSampleMessage")
-curl -X POST -H "Content-Type: application/json" -d "$KEY_EXCH" "$1:8080/keyexchange"
+#curl -X POST -H "Content-Type: application/json" -d "$KEY_EXCH" "$1:8080/keyexchange"
+curl -X POST -H "Content-Type: application/json" -d "$KEY_EXCH" "$1:8080/keyexchange" | jq -r ".encryptedSampleMessage" > encrypted_sample_message.txt
 # decode the message
-DEC_SAM_MSG=$(echo -n "$ENC_SAM_MSG" | base64 -d | openssl enc -d -aes-256-cbc -pbkdf2 -k "$MASTER_KEY")
-
+echo "HERE?"
+DEC_SAM_MSG=$(base64 -d "encrypted_sample_message.txt" | openssl enc -d -salt -aes-256-cbc -pbkdf2 -base64 -k "$MASTER_KEY")
+echo "HEREEEE"
 # verify it
 if [ "$DEC_SAM_MSG" == "$SAMPLE_MSG" ]; then
   echo "Client-Server TLS handshake has been completed successfully"
