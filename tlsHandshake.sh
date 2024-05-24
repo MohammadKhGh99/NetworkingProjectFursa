@@ -40,7 +40,7 @@ openssl smime -encrypt -aes-256-cbc -in master-key.pem -outform DER cert.pem | b
 # send the encrypted master-key
 SESSION_ID=$(cat sessionID.txt)
 MASTER_KEY=$(cat master-key.pem)
-SAMPLE_MSG="Hi server, please encrypt me and send me to client!"
+SAMPLE_MSG="Hi server, please encrypt me and send to client!"
 KEY_EXCH="{'sessionID': $SESSION_ID, 'masterKey': $MASTER_KEY, 'sampleMessage', '$SAMPLE_MSG'}"
 
 # get the encrypted sample message from server
