@@ -1,5 +1,5 @@
 #!/bin/bash
-
+echo "current IP:   $1"
 # checks if the user gives the script the ip addres of the server
 if [ $# -ne 1 ]; then
   echo "Please add the server ip as argument"
