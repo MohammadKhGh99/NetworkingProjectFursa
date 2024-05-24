@@ -12,11 +12,11 @@ CLIENT_HELLO='{"version": "1.3", "ciphersSuites": ["TLS_AES_128_GCM_SHA256", "TL
 SERVER_HELLO=$(curl -X POST -H "Content-Type: application/json" -d "$CLIENT_HELLO" "$1:8080/clienthello" | jq {"sessionID , serverCert"})
 
 # save session ID in sessionID.txt file
-echo "$SERVER_HELLO" | jq ".sessionID" > "sessionID.txt"
+echo "$SERVER_HELLO" | jq -r ".sessionID" > "sessionID.txt"
 
 # save serverCert in cert.pem file
-echo "$SERVER_HELLO" | jq ".serverCert" > "cert.pem"
-cat cert.pem
+echo "$SERVER_HELLO" | jq -r ".serverCert" > "cert.pem"
+
 # getting cert-ca-aws.pem file (aws CA certificate)
 wget "https://alonitac.github.io/DevOpsTheHardWay/networking_project/cert-ca-aws.pem"
 
@@ -48,10 +48,7 @@ ENC_SAM_MSG=$(curl -X POST -H "Content-Type: application/json" -d "$KEY_EXCH" "$
 
 # decode the message
 DEC_SAM_MSG=$(base64 -d "$ENC_SAM_MSG" | openssl enc -d -aes-256-cbc -pbkdf2 -k "$MASTER_KEY")
-echo "Dec Message:"
-echo "#DEC_SAM_MSG"
-echo "Sample Message:"
-echo "$SAMPLE_MSG"
+
 # verify it
 if [ "$DEC_SAM_MSG" == "$SAMPLE_MSG" ]; then
   echo "Client-Server TLS handshake has been completed successfully"
