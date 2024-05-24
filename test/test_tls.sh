@@ -9,7 +9,7 @@ sleep 5
 if [[ $1 = "eve" ]]
 then
 
-  bash tlsHandshake.sh 127.0.0.1
+  bash -x tlsHandshake.sh 127.0.0.1
   EXIT_CODE=$?
   kill -9 $! &> /dev/null
 
@@ -24,7 +24,7 @@ then
 elif [[ $1 = "bad-msg" ]]
 then
 
-  bash tlsHandshake.sh 127.0.0.1
+  bash -x tlsHandshake.sh 127.0.0.1
   EXIT_CODE=$?
   kill -9 $! &> /dev/null
 
@@ -39,7 +39,7 @@ then
 else
   set -e
 
-  bash tlsHandshake.sh 127.0.0.1
+  bash -x tlsHandshake.sh 127.0.0.1
   curl 127.0.0.1:8080/flush &> /dev/null
   kill -9 $! &> /dev/null
 
