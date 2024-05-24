@@ -44,7 +44,7 @@ SAMPLE_MSG="Hi server, please encrypt me and send to client!"
 KEY_EXCH="{'sessionID': $SESSION_ID, 'masterKey': $MASTER_KEY, 'sampleMessage', '$SAMPLE_MSG'}"
 
 # get the encrypted sample message from server
-ENC_SAM_MSG=$(curl -X POST -H "Content-Type: application/json" -d "$KEY_EXCH" "$1:8080/keyexchange" | jq ".encryptedSampleMessage")
+ENC_SAM_MSG=$(curl -X POST -H "Content-Type: application/json" -d "$KEY_EXCH" "$1:8080/keyexchange" | jq -r ".encryptedSampleMessage")
 
 # decode the message
 DEC_SAM_MSG=$(base64 -d "$ENC_SAM_MSG" | openssl enc -d -aes-256-cbc -pbkdf2 -k "$MASTER_KEY")
