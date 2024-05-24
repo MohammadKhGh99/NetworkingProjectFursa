@@ -29,6 +29,8 @@ else
   echo "$VERIFY_OUTPUT"
 fi
 
+rm -f cert-ca-aws.pem
+
 # generate master key and save it in master-key.pem file
 openssl rand -out master-key.pem 32
 
