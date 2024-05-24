@@ -10,7 +10,7 @@ CLIENT_HELLO='{"version": "1.3", "ciphersSuites": ["TLS_AES_128_GCM_SHA256", "TL
 
 # get the json response from client hello POST request
 SERVER_HELLO=$(curl -X POST -H "Content-Type: application/json" -d "$CLIENT_HELLO" "$1:8080/clienthello" | jq {"sessionID , serverCert"})
-
+echo "Server Hello:    $SERVER_HELLO"
 # save session ID in sessionID.txt file
 echo "$SERVER_HELLO" | jq [".sessionID"] > "sessionID.txt"
 
