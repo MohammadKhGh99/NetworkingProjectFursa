@@ -48,7 +48,10 @@ ENC_SAM_MSG=$(curl -X POST -H "Content-Type: application/json" -d "$KEY_EXCH" "$
 
 # decode the message
 DEC_SAM_MSG=$(base64 -d "$ENC_SAM_MSG" | openssl enc -d -aes-256-cbc -pbkdf2 -k "$MASTER_KEY")
-
+echo "Dec Message:"
+echo "#DEC_SAM_MSG"
+echo "Sample Message:"
+echo "$SAMPLE_MSG"
 # verify it
 if [ "$DEC_SAM_MSG" == "$SAMPLE_MSG" ]; then
   echo "Client-Server TLS handshake has been completed successfully"
