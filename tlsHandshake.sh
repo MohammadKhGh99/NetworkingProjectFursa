@@ -12,10 +12,10 @@ CLIENT_HELLO='{"version": "1.3", "ciphersSuites": ["TLS_AES_128_GCM_SHA256", "TL
 SERVER_HELLO=$(curl -X POST -H "Content-Type: application/json" -d "$CLIENT_HELLO" "$1:8080/clienthello" | jq {"sessionID , serverCert"})
 
 # save session ID in sessionID.txt file
-jq [".sessionID"] "$SERVER_HELLO" > "sessionID.txt"
+echo "$SERVER_HELLO" | jq [".sessionID"] > "sessionID.txt"
 
 # save serverCert in cert.pem file
-jq [".serverCert"] "$SERVER_HELLO" > "cert.pem"
+echo "$SERVER_HELLO" | jq [".serverCert"] > "cert.pem"
 
 # getting cert-ca-aws.pem file (aws CA certificate)
 wget "https://alonitac.github.io/DevOpsTheHardWay/networking_project/cert-ca-aws.pem"
