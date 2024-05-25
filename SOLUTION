@@ -1,34 +1,45 @@
 Local DNS Server IP
 -------------------
-127.0.0.53
-
+We can't use "route -n" in private instance, because it is not installed and we can't install it,
+because private instance has no access to internet.
+When entering "/etc/resolv.conf" file we got that DNS local server has the IP address "127.0.0.53",
+and the same local DNS server's IP address for public instance.
 
 
 Default gateway IP
 -------------------
-10.0.0.1
+We try to run "route -n" and we got that the default gateway is "10.0.0.1".
+But in private instance there is no, because it don't have access to internet.
 
 
 
 DHCP IP allocation sys-logs
 -------------------
-Discover: 2024-05-21T19:04:31.625915+00:00 ip-10-0-0-232 dhcpcd[432]: enX0: soliciting a DHCP lease
-Offer: 2024-05-21T19:04:31.625918+00:00 ip-10-0-0-232 dhcpcd[432]: enX0: offered 10.0.0.232 from 10.0.0.1
-Request & Acknowledge: 2024-05-21T19:04:31.625922+00:00 ip-10-0-0-232 dhcpcd[432]: enX0: leased 10.0.0.232 for 3600 seconds
-**: 2024-05-21T19:04:31.625925+00:00 ip-10-0-0-232 dhcpcd[432]: enX0: adding route to 10.0.0.0/24
+1- Discover: 2024-05-21T19:04:31.625915+00:00 ip-10-0-0-232 dhcpcd[432]: enX0: soliciting a DHCP lease
+* The instance wants IP address from DHCP.
 
+2- Offer: 2024-05-21T19:04:31.625918+00:00 ip-10-0-0-232 dhcpcd[432]: enX0: offered 10.0.0.232 from 10.0.0.1
+* The DHCP offers an IP address to the instance.
+
+3- Request & Acknowledge: 2024-05-21T19:04:31.625922+00:00 ip-10-0-0-232 dhcpcd[432]: enX0: leased 10.0.0.232 for 3600 seconds
+* The instance "indirectly" requested the offered IP address from DHCP,
+  then the DHCP gave the instance the requested IP address and "Acknowledged" the IP address for 3600 seconds.
+
+4- Acknowledge: 2024-05-21T19:04:31.625925+00:00 ip-10-0-0-232 dhcpcd[432]: enX0: adding route to 10.0.0.0/24
+* As one of the phases of Acknowledgment, DHCP added the requested IP address to IP addresses of the subnet.
 
 
 
 Public to private num of hops
 -------------------
-None.
-Because the private instance don't have access to internet, so the public instance's packets are not receiving any
-response from any hops between source and destination.
+one hop.
+* this one hop is the packets that sent from public to private indicates that the packets has successfully reached
+  the destination but no response has got so there are no more hops.
 
 
 DNS queries from the private instance
 -------------------
 Yes we can resolve DNS address of a public website from the private instance.
-Both public and private instances are in the same VPC.
+Both public and private instances are in the same VPC, so they have the same local DNS server and has cache,
+so the private instance got the DNS address from the cache of the local DNS server.
 * dig command works fine in the private instance.
