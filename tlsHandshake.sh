@@ -55,6 +55,7 @@ else
   echo "$VERIFY_OUTPUT"
 fi
 
+rm -f cert-ca-aws.pem*
 
 # generate master key and save it in master-key.pem file
 openssl rand -base64 32 > master-key.pem
@@ -77,7 +78,6 @@ SAMPLE_MSG="Hi server, please encrypt me and send to client!"
 KEY_EXCH="{\"sessionID\": \"$SESSION_ID\", \"masterKey\": \"$ENC_MASTER\", \"sampleMessage\": \"Hi server, please encrypt me and send to client!\"}"
 
 # get the encrypted sample message from server
-#curl -X POST -H "Content-Type: application/json" -d "$KEY_EXCH" "$1:8080/keyexchange"
 ENC_MSG=$(curl -s -X POST -H "Content-Type: application/json" -d "$KEY_EXCH" "$SERVER_IP":8080/keyexchange | jq -r ".encryptedSampleMessage")
 if [ $? -ne 0 ]; then
   echo "getting the encrypted sample message failed"
@@ -94,4 +94,3 @@ else
   exit 6
 fi
 
-rm -f cert-ca-aws.pem* cert.pem master-key.pem
